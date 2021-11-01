@@ -87,35 +87,35 @@ jobs:
        - build_data:/build
      options: --cpus 2
    steps:
-#    - name: Install Dependencies
-#      run: |
-#       apt-get -qy update && apt-get -qy install --no-install-recommends python3-pip net-tools
-#       python3 -m pip install --upgrade pip setuptools
-#       python3 -m pip install bokeh
-#    - name: Test Bokeh
-#      run: python3 -c "import bokeh; print(bokeh.__version__)"
-#    - name: Checkout GNU Radio
-#      uses: actions/checkout@v2
-#      with:
-#        repository: gnuradio/gnuradio
-#        ref: maint-3.8
-#        path: gnuradio
-#        submodules: recursive
-#    - name: CMake GNU Radio
-#      run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
-#    - name: Make GNU Radio
-#      run: 'cd /build && make -j2 -k'
-#    - name: Make Install GNU Radio
-#      run: |
-#       cd /build
-#       su -c "make install"
-#       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
-#       su -c ldconfig
-#    - name: Test GNU Radio
-#      run: |
-#       export PYTHONPATH=/usr/local/lib/python3/dist-packages:$PYTHONPATH
-#       export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-#       python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+   - name: Install Dependencies
+     run: |
+      apt-get -qy update && apt-get -qy install --no-install-recommends python3-pip net-tools
+      python3 -m pip install --upgrade pip setuptools
+      python3 -m pip install bokeh
+   - name: Test Bokeh
+     run: python3 -c "import bokeh; print(bokeh.__version__)"
+   - name: Checkout GNU Radio
+     uses: actions/checkout@v2
+     with:
+       repository: gnuradio/gnuradio
+       ref: maint-3.8
+       path: gnuradio
+       submodules: recursive
+   - name: CMake GNU Radio
+     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio -DENABLE_DOXYGEN=OFF'
+   - name: Make GNU Radio
+     run: 'cd /build && make -j2 -k'
+   - name: Make Install GNU Radio
+     run: |
+      cd /build
+      su -c "make install"
+      su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
+      su -c ldconfig
+   - name: Test GNU Radio
+     run: |
+      export PYTHONPATH=/usr/local/lib/python3/dist-packages:$PYTHONPATH
+      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+      python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
    - name: Checkout OOT Module
      uses: actions/checkout@v2
      with:
