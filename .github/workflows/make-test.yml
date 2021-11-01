@@ -95,7 +95,17 @@ jobs:
        path: gnuradio
        submodules: recursive
    - name: CMake GNU Radio
-     run: 'cd /build && cmake ${GITHUB_WORKSPACE/gnuradio}'
+     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
+   - name: Make GNU Radio
+     run: 'cd /build && make -j8 -k'
+   - name: Make Install GNU Radio
+     run: |
+      cd /build
+      su -c "make install"
+      su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
+      su -c ldconfig
+   - name: Test GNU Radio
+     run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
 #    - uses: actions/checkout@v2
 #      name: Checkout Project
 #    - name: CMake
