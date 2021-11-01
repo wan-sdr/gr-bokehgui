@@ -85,7 +85,7 @@ jobs:
      image: ${{ matrix.containerid }}
      volumes:
        - build_data:/build
-     options: --cpus 8
+     options: --cpus 2
    steps:
    - name: Install Dependencies
      run: |
@@ -104,7 +104,7 @@ jobs:
    - name: CMake GNU Radio
      run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
    - name: Make GNU Radio
-     run: 'cd /build && make -j8 -k'
+     run: 'cd /build && make -j2 -k'
    - name: Make Install GNU Radio
      run: |
       cd /build
@@ -126,7 +126,7 @@ jobs:
        CXXFLAGS: ${{ matrix.cxxflags }}
      run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gr-bokehgui -DENABLE_DOXYGEN=OFF'
    - name: Make OOT Module
-     run: 'cd /build && make -j8 -k'
+     run: 'cd /build && make -j2 -k'
    - name: Make Test
      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
    - name: Make Install
