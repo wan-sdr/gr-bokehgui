@@ -85,7 +85,7 @@ jobs:
      image: ${{ matrix.containerid }}
      volumes:
        - build_data:/build
-     options: --cpus 2
+     options: --cpus 8
    steps:
    - name: Install Dependencies
      run: |
@@ -112,7 +112,10 @@ jobs:
       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
       su -c ldconfig
    - name: Test GNU Radio
-     run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+     run: |
+      export PYTHONPATH=/usr/local/lib/python3/dist-packages:$PYTHONPATH
+      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+      python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
    - name: Checkout OOT Module
      uses: actions/checkout@v2
      with:
@@ -123,7 +126,7 @@ jobs:
        CXXFLAGS: ${{ matrix.cxxflags }}
      run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gr-bokehgui -DENABLE_DOXYGEN=OFF'
    - name: Make OOT Module
-     run: 'cd /build && make -j2 -k'
+     run: 'cd /build && make -j8 -k'
    - name: Make Test
      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
    - name: Make Install
@@ -133,4 +136,7 @@ jobs:
       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
       su -c ldconfig
    - name: Test OOT Module
-     run: python3 -c "import bokehgui as bk; print(bk)"
+     run: |
+      export PYTHONPATH=/usr/local/lib/python3/dist-packages:$PYTHONPATH
+      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+      python3 -c "import bokehgui as bk; print(bk)"
