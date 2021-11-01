@@ -85,7 +85,7 @@ jobs:
      image: ${{ matrix.containerid }}
      volumes:
        - build_data:/build
-     options: --cpus 8
+     options: --cpus 2
    steps:
    - name: Install Dependencies
      run: |
