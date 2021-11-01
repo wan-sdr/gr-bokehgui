@@ -94,40 +94,43 @@ jobs:
       python3 -m pip install bokeh
    - name: Test Bokeh
      run: python3 -c "import bokeh; print(bokeh.__version__)"
-#    - name: Checkout GNU Radio
-#      uses: actions/checkout@v2
-#      with:
-#        repository: gnuradio/gnuradio
-#        ref: maint-3.8
-#        path: gnuradio
-#        submodules: recursive
-#    - name: CMake GNU Radio
-#      run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
-#    - name: Make GNU Radio
-#      run: 'cd /build && make -j8 -k'
-#    - name: Make Install GNU Radio
-#      run: |
-#       cd /build
-#       su -c "make install"
-#       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
-#       su -c ldconfig
-#    - name: Test GNU Radio
-#      run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
-#    - uses: actions/checkout@v2
-#      name: Checkout Project
-#    - name: CMake
-#      env:
-#        CXXFLAGS: ${{ matrix.cxxflags }}
-#      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
-#    - name: Make
-#      run: 'cd /build && make -j2 -k'
-#    - name: Make Test
-#      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
-#    - name: Make Install
-#      run: |
-#       cd /build
-#       su -c "make install"
-#       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
-#       su -c ldconfig
-#    - name: Test Python3
-#      run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+   - name: Checkout GNU Radio
+     uses: actions/checkout@v2
+     with:
+       repository: gnuradio/gnuradio
+       ref: maint-3.8
+       path: gnuradio
+       submodules: recursive
+   - name: CMake GNU Radio
+     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
+   - name: Make GNU Radio
+     run: 'cd /build && make -j8 -k'
+   - name: Make Install GNU Radio
+     run: |
+      cd /build
+      su -c "make install"
+      su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
+      su -c ldconfig
+   - name: Test GNU Radio
+     run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+   - name: Checkout OOT Module
+     uses: actions/checkout@v2
+     with:
+       ref: maint-3.8
+       path: gr-bokehgui
+   - name: CMake OOT Module
+     env:
+       CXXFLAGS: ${{ matrix.cxxflags }}
+     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gr-bokehgui -DENABLE_DOXYGEN=OFF'
+   - name: Make OOT Module
+     run: 'cd /build && make -j2 -k'
+   - name: Make Test
+     run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
+   - name: Make Install
+     run: |
+      cd /build
+      su -c "make install"
+      su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
+      su -c ldconfig
+   - name: Test OOT Module
+     run: python3 -c "import bokehgui as bk; print(bk)"
