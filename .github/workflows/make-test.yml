@@ -87,25 +87,30 @@ jobs:
        - build_data:/build
      options: --cpus 2
    steps:
-   - name: Checkout GNU Radio
-     uses: actions/checkout@v2
-     with:
-       repository: gnuradio/gnuradio
-       ref: maint-3.8
-       path: gnuradio
-       submodules: recursive
-   - name: CMake GNU Radio
-     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
-   - name: Make GNU Radio
-     run: 'cd /build && make -j8 -k'
-   - name: Make Install GNU Radio
+   - name: Install Dependencies
      run: |
-      cd /build
-      su -c "make install"
-      su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
-      su -c ldconfig
-   - name: Test GNU Radio
-     run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+      sudo apt-get -qy install --no-install-recommends python3-pip net-tools
+      python3 -m pip install --upgrade pip setuptools
+      python3 -m pip install bokeh
+#    - name: Checkout GNU Radio
+#      uses: actions/checkout@v2
+#      with:
+#        repository: gnuradio/gnuradio
+#        ref: maint-3.8
+#        path: gnuradio
+#        submodules: recursive
+#    - name: CMake GNU Radio
+#      run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio'
+#    - name: Make GNU Radio
+#      run: 'cd /build && make -j8 -k'
+#    - name: Make Install GNU Radio
+#      run: |
+#       cd /build
+#       su -c "make install"
+#       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
+#       su -c ldconfig
+#    - name: Test GNU Radio
+#      run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
 #    - uses: actions/checkout@v2
 #      name: Checkout Project
 #    - name: CMake
