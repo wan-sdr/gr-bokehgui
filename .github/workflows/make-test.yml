@@ -85,13 +85,15 @@ jobs:
      image: ${{ matrix.containerid }}
      volumes:
        - build_data:/build
-     options: --cpus 2
+     options: --cpus 8
    steps:
    - name: Install Dependencies
      run: |
-      sudo apt-get -qy install --no-install-recommends python3-pip net-tools
+      apt-get -qy update && apt-get -qy install --no-install-recommends python3-pip net-tools
       python3 -m pip install --upgrade pip setuptools
       python3 -m pip install bokeh
+   - name: Test Bokeh
+     run: python3 -c "import bokeh; print(bokeh.__version__)"
 #    - name: Checkout GNU Radio
 #      uses: actions/checkout@v2
 #      with:
