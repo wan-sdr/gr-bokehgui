@@ -83,8 +83,8 @@ jobs:
    name: ${{ matrix.distro }}
    container:
      image: ${{ matrix.containerid }}
-     volumes:
-       - build_data:/build
+#      volumes:
+#        - build_data:/build
      options: --cpus 2
    steps:
    - name: Install Dependencies
@@ -124,7 +124,7 @@ jobs:
    - name: CMake OOT Module
      env:
        CXXFLAGS: ${{ matrix.cxxflags }}
-     run: 'cd /build && cmake -DENABLE_DOXYGEN=OFF ${GITHUB_WORKSPACE}/gr-bokehgui'
+     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gr-bokehgui -DENABLE_DOXYGEN=OFF' 
    - name: Make OOT Module
      run: 'cd /build && make -j2 -k'
    - name: Make Test
