@@ -102,7 +102,7 @@ jobs:
        path: gnuradio
        submodules: recursive
    - name: CMake GNU Radio
-     run: '/cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio -DENABLE_DOXYGEN=OFF'
+     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio -DENABLE_DOXYGEN=OFF'
    - name: Make GNU Radio
      run: 'cd /build && make -j2 -k'
    - name: Make Install GNU Radio
