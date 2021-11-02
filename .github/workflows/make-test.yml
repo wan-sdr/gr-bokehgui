@@ -83,8 +83,8 @@ jobs:
    name: ${{ matrix.distro }}
    container:
      image: ${{ matrix.containerid }}
-#      volumes:
-#        - build_data:/build
+     volumes:
+       - build_data:/build
      options: --cpus 2
    steps:
    - name: Install Dependencies
@@ -102,7 +102,7 @@ jobs:
        path: gnuradio
        submodules: recursive
    - name: CMake GNU Radio
-     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio -DENABLE_DOXYGEN=OFF'
+     run: '/cd /build && cmake ${GITHUB_WORKSPACE}/gnuradio -DENABLE_DOXYGEN=OFF'
    - name: Make GNU Radio
      run: 'cd /build && make -j2 -k'
    - name: Make Install GNU Radio
@@ -124,7 +124,7 @@ jobs:
    - name: CMake OOT Module
      env:
        CXXFLAGS: ${{ matrix.cxxflags }}
-     run: 'cd /build && cmake ${GITHUB_WORKSPACE}/gr-bokehgui -DENABLE_DOXYGEN=OFF' 
+     run: 'rm -rf /build/* && cd /build && cmake ${GITHUB_WORKSPACE}/gr-bokehgui -DENABLE_DOXYGEN=OFF' 
    - name: Make OOT Module
      run: 'cd /build && make -j2 -k'
    - name: Make Test
